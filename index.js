@@ -24,8 +24,17 @@ document.addEventListener('keydown', (e) => {
 })
 document.addEventListener('keyup', (e) => {
   if (e.code in keyz) { keyz[e.code] = false; }
-  console.log(keyz);
+  // console.log(keyz);
 })
+document.addEventListener('mousemove', e => {
+  const val = e.clientX - canvas.offsetLeft;
+  if(val > player.w && val < canvas.width) {
+    player.x = val - player.w;
+    console.log(player.x );
+
+    }
+});
+
 
 game.animationFrame = requestAnimationFrame(draw);
 

@@ -5,13 +5,22 @@ const game = {
   grid: 60,
   animationFrame: ''
 };
+const ball = {
+  x: game.grid * 7, 
+  y: game.grid * 5, 
+  w: game.grid/3, 
+  h: game.grid/3, 
+  color: 'green',
+  dirx:5,
+  diry:5
+}
 const player = { 
   x: game.grid * 7, 
   y: game.grid * 8, 
   w: game.grid * 2, 
   h: game.grid / 2, 
   color: 'red',
-  speed: 5
+  speed: 5 
 
 };
 const keyz = { ArrowLeft: false, ArrowRight: false };
@@ -47,10 +56,54 @@ function movement() {
   }
 }
 
+// Ball movement
+function ballmove() {
+  if(ball.x > canvas.width || ball.x < 0){
+    ball.dirx *= -1;
+  }
+  if(ball.y > canvas.height || ball.y < 0){
+    ball.diry *= -1;
+  }
+  ball.x += ball.dirx;   
+  ball.y += ball.diry;
+}
+
+// Draw Ball
+function drawBall() {
+  ctx.beginPath();
+  ctx.strokeStyle = 'white';
+  ctx.rect(ball.x, ball.y, ball.w, ball.h);
+  ctx.stroke();
+  ctx.closePath();
+  
+  
+  ctx.beginPath();
+  ctx.fillStyle = ball.color;
+  let adjust = ball.w/2;
+  ctx.arc(ball.x+adjust, ball.y+adjust, ball.w/2,0,Math.PI*2);
+  ctx.fill()
+  ctx.closePath();
+
+}
+
+//Draw Player
+function drawPlayer() {
+  ctx.beginPath();
+  ctx.rect(player.x, player.y, player.w, player.h);
+  ctx.fillStyle = player.color;
+  ctx.fill();
+  ctx.closePath();
+}
+
+
+
 
 function draw() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   movement();
+  ballmove();
+  drawPlayer();
+  drawBall();
   ctx.beginPath();
   ctx.rect(player.x, player.y, player.w, player.h);
   ctx.fillStyle = player.color;

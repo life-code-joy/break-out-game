@@ -1,4 +1,5 @@
 const canvas = document.createElement('canvas');
+canvas.style.backgroundColor = 'black';
 const ctx = canvas.getContext('2d');
 document.body.prepend(canvas);
 const game = { 
@@ -8,6 +9,7 @@ const game = {
 const ball = {
   x: game.grid * 7, 
   y: game.grid * 5, 
+  
   w: game.grid/3, 
   h: game.grid/3, 
   color: 'green',
@@ -39,13 +41,22 @@ document.addEventListener('mousemove', e => {
   const val = e.clientX - canvas.offsetLeft;
   if(val > player.w && val < canvas.width) {
     player.x = val - player.w;
-    console.log(player.x );
+    // console.log(player.x );
 
     }
 });
 
 
 game.animationFrame = requestAnimationFrame(draw);
+
+function collDetection(obj1,obj2) {
+  const xAxis = (obj1.x < (obj2.x + obj2.w)) && ((obj1.x + obj1.x) > obj2.x);
+  const yAxis = (obj1.y < (obj2.y + obj2.h)) && ((obj1.y + obj1.h) > obj2.y);
+  const val = xAxis && yAxis;
+  return val;
+}
+
+
 
 function movement() {
   if(keyz.ArrowLeft) {
@@ -73,7 +84,7 @@ function drawBall() {
   ctx.beginPath();
   ctx.strokeStyle = 'white';
   ctx.rect(ball.x, ball.y, ball.w, ball.h);
-  ctx.stroke();
+  // ctx.stroke();
   ctx.closePath();
   
   
@@ -104,11 +115,15 @@ function draw() {
   ballmove();
   drawPlayer();
   drawBall();
-  ctx.beginPath();
-  ctx.rect(player.x, player.y, player.w, player.h);
-  ctx.fillStyle = player.color;
-  ctx.fill();
-  ctx.closePath();
+  if(collDetection(player,ball)){
+    ball.diry *= -1;
+    let val1 = ball.x + (ball.w/2) - player.x;
+    let val2 = val1 - player.w/2;
+    let val3 = Math.ceil(val2/(player.w/10));
+    ball.dirx = val3;
+    console.log(val1, val2, val3);
+
+  }
   game.animationFrame = requestAnimationFrame(draw);
 }
 
